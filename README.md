@@ -302,6 +302,64 @@ avearge_sleep <- daily_sleep1 %>%
 daily_average1 <- merge(daily_average, avearge_sleep,by=c("id"),all=TRUE)
 ```
 
+| id | mean_daily_steps | mean_daily_calories | mean_daily_sleep |
+| ----------- | ----------- | ----------- | ----------- |
+| 1503960366 | 11640.526 | 1796.211 | 360.2800 |
+| 1644430081 | 9274.800 | 2916.400 | 294.0000 |
+| 1844505072 | 3640.583 | 1615.917 | 652.0000 |
+| 1927972279 | 2180.833 | 2254.000 | 417.0000 |
+| 2026352035 | 3392.750 | 1355.500 | 506.1786 |
+| 2320127002 | 3138.417 | 1532.083 | 61.0000 |
+| 2347167796 | 9800.067 | 2021.333 | 446.8000 |
+| 3977333714 | 8663.917 | 1398.083 | 293.6429 |
+| 4020332650 | 5776.594 | 3075.375 | 349.3750 |
+| 4319703577 | 7820.583 | 1994.250 | 476.6538 |
+Showing 1 to 10 of 24 enteries
+
+- I want to group our users into four categories of sedentary, lightly active, fairly active and very active using the daily average steps as a metric, to discover our users' daily habit/activity. First, I will find the min $ max of mean_daily_steps. 
+
+```R
+min_daily_step <- daily_average1 %>%
+  filter(mean_daily_steps > 0) %>%
+  summarise(min_daily_step = min(mean_daily_steps, na.rm = TRUE))  
+
+max_daily_step <- daily_average1 %>%
+  filter(mean_daily_steps > 0) %>%
+  summarise(max_daily_step = max(mean_daily_steps, na.rm = TRUE))
+```
+- Outcome
+  
+1. **min_daily_step = 773.625**
+2. **max_daily_steps = 17417.08**
+
+- Next, is to calculate thresholds 
+
+```R
+step_range <- max_daily_step - min_daily_step
+increment <- step_range / 4
+```
+
+- Thresholds for categories
+  
+```R
+thresholds <- c(
+  min_daily_step,
+  min_daily_step + increment,
+  min_daily_step + 2 * increment,
+  min_daily_step + 3 * increment,
+  max_daily_step
+)
+```
+
+```R
+user_type <- daily_average1 %>% 
+  mutate(user_type = case_when(
+    mean_daily_steps <= thresholds[2] ~ "sedentary",
+    mean_daily_steps <= thresholds[3] ~ "lightly active",
+    mean_daily_steps <= thresholds[4] ~ "fairly active",
+    TRUE ~ "very active"
+  ))
+```
 
 
 
