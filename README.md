@@ -389,6 +389,32 @@ Here is the outcome of the above analysis:
 | 4319703577 | 7820.583 | 1994.250 | 476.6538 | lighly active |
 showing 1 to 10 of 24 enteries
 
+- Visualization of the outcome of the user_type using ggplot2 (Bar chart):  
+
+```R
+library(ggplot2)
+ggplot(user_distribution, aes(x = user_type, y = total_percent, fill = user_type)) +
+  geom_bar(stat = "identity") + # Use identity since you've already calculated the values
+  geom_text(aes(label = labels), vjust = -0.5) + # Add percentage labels above bars
+  scale_y_continuous(labels = scales::percent) + # Format y-axis as percentages
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3")) + # Four colors
+  labs(
+    title = "User Type Distribution",
+    x = "User Type",
+    y = "Percentage",
+    fill = "User Type"
+  )
+```
+
+![bar char](https://github.com/user-attachments/assets/349cc605-b3c3-49a1-aab0-139d65bdad0b)
+
+## Finding/Outcome
+
+The visualization reveals that a higher percentage of smart device users engage in sedentary activity, followed by lightly active, fairly active, and very active users. Based on this finding, I recommend that Bellabeat introduce reminders to encourage sedentary users to take short walks and stay active throughout the day. Gamified challenges and personalized goals can motivate users to gradually increase their daily activity levels. Additionally, providing educational content on the health benefits of regular movement can help users make informed decisions to improve their fitness habits from sedendary to at aleast fairly active.
+
+
+
+
 
 
 
