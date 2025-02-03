@@ -49,7 +49,7 @@ heartrate_seconds <- read.csv("Fitabase Data 3.12.16-4.11.16/heartrate_seconds_m
 
 ### Preview Data set
 
-Before I preview the structure and organisation of the relevant datasets, I want to rename the "dailyActivity_merged" as 
+Before I preview the structure and organisation of the datasets, I want to rename the "dailyActivity_merged" as 
 
 ```R
 daily_activity1 <- dailyActivity_merged
@@ -258,9 +258,9 @@ str(heartrate_seconds1)
  $ date_time: POSIXct, format: "2016-04-01 07:54:00" "2016-04-01 07:54:05" "2016-04-01 07:54:10" ...
  $ value    : int  93 91 96 98 100 101 104 105 102 106 ...
 ```
-As we can see, the changes have been correctly applied.
+As observed, the changes have been successfully applied. The column names are now in lowercase, and the date_time columns have been converted to a format readable by R.
 
-- Now that the date$time are in the right format recognizable in R, I will go ahead to separate the date_time column in hourly_steps1 into separate columns of date and time.
+- Now that the date$time are in the right format recognizable by R, I will go ahead to separate the date_time column in hourly_steps1 into separate columns of date and time.
 
 ```R
 library(tidyr)
@@ -316,7 +316,8 @@ daily_average1 <- merge(daily_average, avearge_sleep,by=c("id"),all=TRUE)
 | 4319703577 | 7820.583 | 1994.250 | 476.6538 |
 Showing 1 to 10 of 24 enteries
 
-- I want to group our users into four categories of sedentary, lightly active, fairly active and very active using the daily average steps as a metric, to discover our users' daily habit/activity. First, I will find the min $ max of mean_daily_steps. 
+- Having calculated the average daily steps, calories, and sleep for each user, I now aim to group the users into four activity categories: Sedentary, Lightly Active, Fairly Active, and Very Active. This classification will help identify how many users fall into each category based on their daily activity levels.
+To achieve this, I will use the mean_daily_steps as the primary metric. First, I will determine the minimum and maximum values of the mean_daily_steps to better understand the data distribution and define appropriate step thresholds for each category.
 
 ```R
 min_daily_step <- daily_average1 %>%
