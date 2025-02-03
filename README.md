@@ -413,6 +413,80 @@ ggplot(user_distribution, aes(x = user_type, y = total_percent, fill = user_type
 The visualization reveals that a higher percentage of smart device users engage in sedentary activity, followed by lightly active, fairly active, and very active users. Based on this finding, I recommend that Bellabeat introduce reminders to encourage sedentary users to take short walks and stay active throughout the day. Gamified challenges and personalized goals can motivate users to gradually increase their daily activity levels. Additionally, providing educational content on the health benefits of regular movement can help users make informed decisions to improve their fitness habits from sedendary to at aleast fairly active.
 
 
+# Finding Correlations
+
+- I want to discover if there are correlation between the following different variables:
+  
+  - **Daily steps and daily sleep**
+  - **Daily steps and calories**
+  
+Note: totalminutesasleep is not in the daily_activity_2 dataset. So, I will merge daily_activity_2 and daily_sleep1 as daily_activity_1 for ease of reference. For this, I will perform the following analysis to ensure that:
+
+- Ensure 'id' columns are consistent in daily_activity_2 & daily_sleep1.
+- Remove duplicate valuse from the two datasets.
+- Remove missing values in 'id'
+- Thereafter, I will merge the two datasets for easy analysis. 
+  
+
+```R
+library(dplyr)
+
+# Ensure 'id' columns are consistent
+daily_activity_2$id <- as.character(daily_activity_2$id)
+daily_sleep1$id <- as.character(daily_sleep1$id)
+
+# Remove duplicates
+daily_activity_2 <- daily_activity_2 %>%
+  distinct(id, .keep_all = TRUE)
+
+daily_sleep1 <- daily_sleep1 %>%
+  distinct(id, .keep_all = TRUE)
+
+# Remove missing values in 'id'
+daily_activity_2 <- daily_activity_2 %>% filter(!is.na(id))
+daily_sleep1 <- daily_sleep1 %>% filter(!is.na(id))
+
+# Merge datasets
+daily_activity_1 <- merge(daily_activity_2, daily_sleep1, by = "id", all = TRUE)
+```
+All done. I will go ahead to preview daily_activity_1
+
+```R
+head(daily_activity_1)
+```
+**Result**
+
+```R
+ id       date totalsteps totaldistance trackerdistance loggedactivitiesdistance
+1 1503960366 2016-03-25      11004          7.11            7.11                        0
+2 1624580081 2016-03-25       1810          1.18            1.18                        0
+3 1644430081 2016-04-01       4636          3.41            3.41                        0
+4 1844505072 2016-04-01       6847          4.53            4.53                        0
+5 1927972279 2016-04-01       4317          2.99            2.99                        0
+6 2022484408 2016-04-01      13603          9.60            9.60                        0
+  veryactivedistance moderatelyactivedistance lightactivedistance sedentaryactivedistance
+1               2.57                     0.46                4.07                    0.00
+2               0.00                     0.00                1.13                    0.01
+3               0.00                     0.78                2.60                    0.03
+4               0.61                     0.37                3.55                    0.00
+5               0.00                     0.37                2.62                    0.00
+6               5.46                     0.63                3.51                    0.00
+  veryactiveminutes fairlyactiveminutes lightlyactiveminutes sedentaryminutes calories  date_time
+1                33                  12                  205              804     1819       <NA>
+2                 0                   0                  121             1319     1373       <NA>
+3                 0                  16                  586              838     3323 2016-04-29
+4                 9                   9                  251             1171     1969 2016-04-15
+5                 0                  11                  192              854     2590       <NA>
+6                72                  16                  213             1139     2645       <NA>
+  totalsleeprecords totalminutesasleep totaltimeinbed
+1                 1                327            346
+2                NA                 NA             NA
+3                 1                119            127
+4                 1                644            961
+5                 3                750            775
+6                NA                 NA             NA
+
+```
 
 
 
