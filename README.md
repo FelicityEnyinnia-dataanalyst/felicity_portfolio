@@ -488,7 +488,13 @@ head(daily_activity_1)
 
 ```
 
+# Visualization to find correlations
 
+I want to visualize the daily_activity_1 dataset to find the relationship betweeen:
+
+1. Daily Steps and Sleep.
+2. Daily Steps and calories.
+3. Daily Sleep and Calories.
 
 
 
