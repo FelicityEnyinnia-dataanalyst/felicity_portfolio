@@ -146,6 +146,8 @@ We have 14 distinct Id in heartrate_seconds
 
 ## Locate duplicate values in the datasets.
 
+I want to check for duplicate values in the datasets.
+
 ```R
 sum(duplicated(daily_activity1))
 sum(duplicated(hourly_steps))
@@ -173,7 +175,7 @@ sum(duplicated(daily_sleep))
 ```
 
 ## Clean and Rename Column Names
-- I want to rename and format the column names. This is to ensure that the column names are using the right syntax and consistent considering that I may decide to merge the datasets subsequently to discover trends and correlations. I will use the clean_names and rename_with functions to convert the column names to lowercase.
+- I want to rename and format the column names. This is to ensure that the column names are using the right syntax and consistent considering that I may decide to merge the datasets subsequently, to discover trends and correlations. I will use the clean_names and rename_with functions to convert the column names to lowercase.
 
 ```R
 library(janitor)
@@ -280,7 +282,7 @@ $ id       : num  1.5e+09 1.5e+09 1.5e+09 1.5e+09 1.5e+09 ...
  $ time     : chr  NA "01:00:00" "02:00:00" "03:00:00" ...
  $ steptotal: int  0 0 0 0 0 0 0 0 0 8 ...
 ```
-I am done with data exploration. It is time to analysis the datasets to find hidden insights therein.
+At this point, I am done with data exploration. It is time to analysis the datasets to find hidden insights therein.
 
 ### Data Analysis
 
@@ -333,14 +335,16 @@ max_daily_step <- daily_average1 %>%
 1. **min_daily_step = 773.625**
 2. **max_daily_steps = 17417.08**
 
-- Next, is to calculate thresholds 
+- Now that we have the min_daily_step$max_daily_steps, we will utilize same to set the criteria for distributing our users into the above four activity levels.  
 
 ```R
-step_range <- max_daily_step - min_daily_step
-increment <- step_range / 4
+step_range <- max_daily_step - min_daily_step  # 16,643.46
+increment <- step_range / 4                    # 4,160.865
 ```
+The result step_range gives the total spread of step counts in the dataset.
+Increment divides the step_range by 4 to create equal intervals for categorizing users into four activity levels. This means that each category covers a 4,160.865 step_range.
 
-- Thresholds for categories
+- Now, let us define the thresholds for the categories
   
 ```R
 thresholds <- c(
@@ -351,16 +355,40 @@ thresholds <- c(
   max_daily_step
 )
 ```
+| thresholds | list[5] | list of length |
+| ----------- | ----------- | ----------- |
+| min_daily_step | double [1] | 773.625 |
+| min_daily_step | double [2] | 4934.49 |
+| min_daily_step | double [3] | 9095.354 |
+| min_daily_step | double [4] | 13256.22 |
+| max_daily_step | double [5] | 17417.08 |
+
+Now that we have arrived at the threshold for categoring our users into the identified activity levels, lets dive into it. 
 
 ```R
 user_type <- daily_average1 %>% 
   mutate(user_type = case_when(
-    mean_daily_steps <= thresholds[2] ~ "sedentary",
-    mean_daily_steps <= thresholds[3] ~ "lightly active",
-    mean_daily_steps <= thresholds[4] ~ "fairly active",
-    TRUE ~ "very active"
+    mean_daily_steps <= thresholds[2] ~ "sedentary",      # if a user's daily steps are less than or equal to the value of thresholds [2], classify them as "sedentary" 
+    mean_daily_steps <= thresholds[3] ~ "lightly active", # steps within thresholds [3], classify them as "lightly active"
+    mean_daily_steps <= thresholds[4] ~ "fairly active",  # seps within threholds [4], classify them as "fairly active"
+    TRUE ~ "very active"                                  # any remaining values fall into "very acrive" category.
   ))
 ```
+Here is the outcome of the above analysis:
+| id | mean_daily_steps | mean_daily_calories | mean_daily_sleep | user_type |
+| ----------- | ----------- | ----------- | ----------- | ----------- 
+| 1503960366 | 11640.526 | 1796.211 | 360.2800 | fairly active |
+| 1644430081 | 9274.800 | 2916.400 | 294.0000 | fairly active |
+| 1844505072 | 3640.583 | 1615.917 | 652.0000 | sedentary |
+| 1927972279 | 2180.833 | 2254.000 | 417.0000 | sedentary |
+| 2026352035 | 3392.750 | 1355.500 | 506.1786 | sedentary |
+| 2320127002 | 3138.417 | 1532.083 | 61.0000 | sedentary |
+| 2347167796 | 9800.067 | 2021.333 | 446.8000 | fairly active |
+| 3977333714 | 8663.917 | 1398.083 | 293.6429 | lightly active |
+| 4020332650 | 5776.594 | 3075.375 | 349.3750 | lightly active |
+| 4319703577 | 7820.583 | 1994.250 | 476.6538 | lighly active |
+showing 1 to 10 of 24 enteries
+
 
 
 
