@@ -492,9 +492,140 @@ head(daily_activity_1)
 
 I want to visualize the daily_activity_1 dataset to find the relationship betweeen:
 
-1. Daily Steps and Sleep.
-2. Daily Steps and calories.
-3. Daily Sleep and Calories.
+1. **Daily Steps and Sleep**.
+
+```R
+ggplot(daily_activity_1, aes(x = totalminutesasleep, y = totalsteps )) +
+  geom_jitter() +
+  geom_smooth(color = "blue") +
+  labs(title = "Relationship Between Daily Steps and Sleep", x = "Sleep Duration (minutes)", y = "Daily Steps")+
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size=15))
+```
+
+![dailysteps sleep](https://github.com/user-attachments/assets/ae204668-613e-4abb-891a-55ee23e24fcf)
 
 
+2. **Daily Steps and calories**.
+
+```R
+ggplot(daily_activity_1, aes(x = totalsteps, y = calories)) +
+  geom_jitter() +
+  geom_smooth(color = "blue") +
+  labs(title = "Relationship Between Daily Steps and Calories", x = "Daily Steps", y = "Calories")+
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size=15))
+```
+
+![dailysteps$calories](https://github.com/user-attachments/assets/d36691cd-0c53-4fd2-b7fe-c875fd783cde)
+
+3. **Daily Sleep and Calories**.
+   
+```R
+ggplot(daily_activity_1, aes(x = totalminutesasleep, y = calories)) +
+  geom_jitter() +
+  geom_smooth(color = "blue") +
+  labs(title = "Relationship Between Daily Sleep and Calories", x = "Sleep Duration (minutes)", y = "Calories")+
+  theme(panel.background = element_blank(),
+        plot.title = element_text(size=14))
+```
+
+![dailysleep calories](https://github.com/user-attachments/assets/d06e7e39-8655-4adc-b53a-aa02d602d739)
+
+### Outcome/Findings of the above viz
+
+1. There is no correlation between daily activity level based on steps and the length of minutes users sleep a day.
+2. There is a positive correlation between steps and calories burned. This means that the more steps walked by users the more calories burn.
+3. There is no correlation between the amount of minutes users sleep a day and calories burned.
+- Since there is a positive correlation between steps and calories burned, Bellabeat can introduce features that highlight and track daily calorie burn based on step goals. This approach will inspire users to engage more in daily walks, as it enables calories loss and overall fitness.
+- Since sleep length does not correlate with calorie burn, sleep tracking can be positioned as a general wellness tool. Additionally, Bellabeat can encourage users to view sleep data alongside other indicators like stress, which can negatively impact sleep habits.
+
+
+# Active Hour of the Day
+
+- I want to calculate the hour of the day when users are more active based on steps taken.
+
+```R
+hourly_steps2 %>%
+  group_by(time) %>% 
+  summarise(averagesteps = mean(steptotal, na.rm = TRUE)) %>%
+  ggplot(aes(x = time, y = averagesteps)) +
+  geom_line(group = 1, color = "green") +
+  labs(title = "Hourly Steps Throughout the Day", x = "time", y = "averagesteps")
+```
+
+- Viz hourly activity with ggplot2
+
+```R
+hourly_steps2 %>%
+  group_by(time) %>% 
+  summarise(averagesteps = mean(steptotal, na.rm = TRUE)) %>%
+  ggplot(aes(x = time, y = averagesteps)) +
+  geom_line(group = 1, color = "green") +
+  labs(title = "Hourly Steps Throughout the Day", x = "time", y = "averagesteps")
+```
+
+![activityhour](https://github.com/user-attachments/assets/6a582a78-daed-488e-9b84-016ada290cce)
+
+**OUTCOME**:
+- The visualization shows that users are more active between 8 am and 7 pm, with peak activity during lunchtime (12 pm to 2 pm) and evenings (5 pm to 7 pm).
+- Given the positive correlation between steps and calories burned, I recommend that Bellabeat introduce a feature reminding users that calories are effectively burned during these key periods. This approach will encourage users to stay more active and take advantage of these peak activity times.
+
+
+# Active Days of the Week
+
+I want to determine which days of the week users are more active based on steps taken.
+
+```R
+daily_activity_1 %>%
+  mutate(weekday = weekdays(date)) %>%         
+  group_by(weekday) %>%
+  summarise(averagesteps = mean(totalsteps, na.rm = TRUE)) %>%
+  ggplot(aes(x = reorder(weekday, averagesteps), y = averagesteps)) +  
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Average Steps by Day of the Week", x = "Day", y = "Average Steps")
+```
+- viz active days with ggplot2
+  
+![active_day](https://github.com/user-attachments/assets/0934af7f-98b1-46af-9119-1919a78923a6)
+
+**Outcome**: Users walk more steps on Wednesdays. The average of users walk more than 7,500 steps daily besides Tuesday. 
+
+
+# Sleep Days
+
+I want to calculate which days of the week users sleep the most.
+  
+```R
+daily_activity_1 %>%
+  mutate(weekday = weekdays(date)) %>%         # Ensure 'weekday' is lowercase
+  group_by(weekday) %>%
+  summarise(averagesleep = mean(totalminutesasleep, na.rm = TRUE)) %>%
+  ggplot(aes(x = reorder(weekday, averagesleep), y = averagesleep)) +  # Use 'weekday'
+  geom_bar(stat = "identity", fill = "purple") +
+  labs(title = "Average Sleep by Day of the Week", x = "Day", y = "Average Sleep")
+```
+
+- viz sleep days withh ggplot2
+
+![sleep_day](https://github.com/user-attachments/assets/a89ae00e-1b90-45ba-bc3e-b703a7aeed87)
+
+**Outcome**: Users sleep for longer minutes on weekend(Saturday). However, users sleep less than 8 hours a day.
+
+# Sleep Efficiency
+
+I want to determine the sleep efficiency of users.
+
+```R
+ggplot(daily_sleep1, aes(x = totalminutesasleep, y = totaltimeinbed)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  labs(title = "Sleep Efficiency", x = "Minutes Asleep", y = "Time in Bed")
+```
+
+- viz sleep efficiency with ggplot2
+  
+![sleep_efficiency](https://github.com/user-attachments/assets/bae7affc-cb47-4def-9101-e4df990aa52c)
+
+**Outcome**: There is a positive relationship between Time in Bed and Minutes Asleep. It is assumed that the amount of minutes users spent in bed are actually spent asleep.
 
