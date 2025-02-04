@@ -1,5 +1,12 @@
 # Playing it Smart: Data-Driven Insights for a Wellness Tech Company
 
+# Table of Contents
+---
+- [Project Overview](#project-overview)
+- [Data Sources](#data-sources)
+- [Tools](#tools)
+- [Load R Packages](#load-r-packages)
+
 ### Project Overview
 
 This data analysis project is being completed as part of the Google Data Analytics Capstone Project. In this simulation, I am acting as a junior data analyst on the marketing analytics team at Bellabeat. Bellabeat is a high-tech company that manufactures health-focused smart devices. The Chief Creative Officer (CCO) of Bellabeat has tasked me with analyzing smart device data available on Kaggle to identify opportunities for the company's growth.
