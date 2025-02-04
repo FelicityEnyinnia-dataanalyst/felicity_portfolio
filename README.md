@@ -1,18 +1,25 @@
 # Playing it Smart: Data-Driven Insights for a Wellness Tech Company
 
-# Table of Contents
+## Table of Contents
 ---
 - [Project Overview](#project-overview)
 - [Data Sources](#data-sources)
 - [Tools](#tools)
 - [Load R Packages](#load-r-packages)
+- [Import Dataset into RStudio](#import-dataset-into-rstudio)
+- [Data Cleaning and Preprocessing - Exploratory Data Analysis](#data-cleaning-and-preprocessing)
+- [Data Analysis](#data-analysis)
+- [Recommendations](#recommendations)
 
-### Project Overview
+
+## Project Overview
+---
 
 This data analysis project is being completed as part of the Google Data Analytics Capstone Project. In this simulation, I am acting as a junior data analyst on the marketing analytics team at Bellabeat. Bellabeat is a high-tech company that manufactures health-focused smart devices. The Chief Creative Officer (CCO) of Bellabeat has tasked me with analyzing smart device data available on Kaggle to identify opportunities for the company's growth.
 The primary objective is to uncover insights about how Bellabeat consumers are using their smart devices to support their fitness journeys. My findings from this analysis will form the basis of data-driven recommendations that I will present to the CCO, which will help Bellabeat optimize its product offerings and marketing strategies to better meet consumer needs and expand its market presence.
 
-### Data Sources
+## Data Sources
+---
 
 FitBit Fitness Tracker Data [Download here](https://www.kaggle.com/datasets/arashnic/fitbit): This public dataset, sourced from Kaggle, contains personal fitness tracking data from 30 Fitbit users. It captures a variety of metrics, including:
 - Daily Steps: Records of users' daily step counts.
@@ -20,13 +27,15 @@ FitBit Fitness Tracker Data [Download here](https://www.kaggle.com/datasets/aras
 - Calories Burned: Daily caloric expenditure.
 - Heart Rate: Heart rate monitoring data.
    
-### Tools
+## Tools
+---
 
 - Excel 
 - R Programming Language - Data Claening, Analysis and Visualization.
 I mostly utilized R in this data analysis. However, Excel was useful in previewing the dataset after I downloded it from Kaggle.
 
-### Load Relevant R Packages
+# Load R Packages
+---
 
 - install.packages("tidyverse")
 - library(tidyverse)
@@ -43,7 +52,8 @@ I mostly utilized R in this data analysis. However, Excel was useful in previewi
 - install.packages("dplyr")
 - library(dplyr)
 
-### Import Data Set into RStudio
+## Import Dataset into RStudio
+---
 
 The dataset for this analysis is downloaded from Kaggle.Rather than using the readr package to import the dataset directly from Kaggle into R, I downloaded the dataset to my laptop and thereafter, uploaded and imported into RStudio using the following codes:
 
@@ -54,7 +64,7 @@ daily_sleep <- read.csv("Fitabase Data 3.12.16-4.11.16/daily_sleep_merged.csv")
 heartrate_seconds <- read.csv("Fitabase Data 3.12.16-4.11.16/heartrate_seconds_merged.csv")
 ```
 
-### Preview Data set
+## Preview Data set
 
 Before I preview the structure and organisation of the datasets, I want to rename the "dailyActivity_merged" as 
 
@@ -131,7 +141,8 @@ $ totaltimeinbed     <int> 346, 407, 442, 367, 712, 320, 377, 364, 384, 449, 323
 From the above outcome, we observe that each of the dataset contains key variables such as the users Id, ActivityDate and other critical metrics essential for analyzing users' daily fitness habits and drawing meaningful insights.
 
 
-### Data Cleaning and Preprocessing
+## Data Cleaning and Preprocessing
+---
 
 - First, I want to find out how many unique Ids are contained in each of the datasets.
 
@@ -151,7 +162,7 @@ We have 24 distinct Id in daily_sleep
 We have 14 distinct Id in heartrate_seconds
 
 
-## Locate duplicate values in the datasets.
+### Locate duplicate values in the datasets.
 
 I want to check for duplicate values in the datasets.
 
@@ -181,7 +192,7 @@ daily_sleep <- daily_sleep %>%
 sum(duplicated(daily_sleep))
 ```
 
-## Clean and Rename Column Names
+### Clean and Rename Column Names
 - I want to rename and format the column names. This is to ensure that the column names are using the right syntax and consistent considering that I may decide to merge the datasets subsequently, to discover trends and correlations. I will use the clean_names and rename_with functions to convert the column names to lowercase.
 
 ```R
@@ -199,7 +210,7 @@ heartrate_seconds <- rename_with(heartrate_seconds, tolower)
 ```
 The columns names have now been converted to lowercase for easy manipulation.
 
-## Consistency of Date and Time
+### Consistency of Date and Time
 
 I observed that the date and time columns in the datasets are not in the proper format readable by R. The dates are not consistent. Hence, this is where the as.date and POSIXct functions comes into place to ensure date and time consistency.
 
@@ -291,7 +302,8 @@ $ id       : num  1.5e+09 1.5e+09 1.5e+09 1.5e+09 1.5e+09 ...
 ```
 At this point, I am done with data exploration. It is time to analysis the datasets to find hidden insights therein.
 
-### Data Analysis
+## Data Analysis
+---
 
 - I will use the daily_activity_2 to find the average of the daily steps taken by each user, group_by id as well as daily calories. Then, I will use the daily_sleep1 dataset to calculate the average of the minutesassleep by each user.
 
@@ -337,7 +349,7 @@ max_daily_step <- daily_average1 %>%
   filter(mean_daily_steps > 0) %>%
   summarise(max_daily_step = max(mean_daily_steps, na.rm = TRUE))
 ```
-- Outcome
+**Outcome**
   
 1. **min_daily_step = 773.625**
 2. **max_daily_steps = 17417.08**
@@ -415,19 +427,19 @@ ggplot(user_distribution, aes(x = user_type, y = total_percent, fill = user_type
 
 ![bar char](https://github.com/user-attachments/assets/349cc605-b3c3-49a1-aab0-139d65bdad0b)
 
-## Finding/Outcome
+**Findings/Outcome**
 
 The visualization reveals that a higher percentage of smart device users engage in sedentary activity, followed by lightly active, fairly active, and very active users. Based on this finding, I recommend that Bellabeat introduce reminders to encourage sedentary users to take short walks and stay active throughout the day. Gamified challenges and personalized goals can motivate users to gradually increase their daily activity levels. Additionally, providing educational content on the health benefits of regular movement can help users make informed decisions to improve their fitness habits from sedendary to at aleast fairly active.
 
 
-# Finding Correlations
+### Finding Correlations
 
 - I want to discover if there are correlation between the following different variables:
   
   - **Daily steps and daily sleep**
   - **Daily steps and calories**
   
-Note: totalminutesasleep is not in the daily_activity_2 dataset. So, I will merge daily_activity_2 and daily_sleep1 as daily_activity_1 for ease of reference. For this, I will perform the following analysis to ensure that:
+**Note**: totalminutesasleep is not in the daily_activity_2 dataset. So, I will merge daily_activity_2 and daily_sleep1 as daily_activity_1 for ease of reference. For this, I will perform the following analysis to ensure that:
 
 - Ensure 'id' columns are consistent in daily_activity_2 & daily_sleep1.
 - Remove duplicate valuse from the two datasets.
@@ -495,7 +507,7 @@ head(daily_activity_1)
 
 ```
 
-# Visualization to find correlations
+### Finding correlations with ggplot2
 
 I want to visualize the daily_activity_1 dataset to find the relationship betweeen:
 
@@ -539,7 +551,7 @@ ggplot(daily_activity_1, aes(x = totalminutesasleep, y = calories)) +
 
 ![dailysleep calories](https://github.com/user-attachments/assets/d06e7e39-8655-4adc-b53a-aa02d602d739)
 
-### Outcome/Findings of the above viz
+**Outcome/Findings of the above viz**
 
 1. There is no correlation between daily activity level based on steps and the length of minutes users sleep a day.
 2. There is a positive correlation between steps and calories burned. This means that the more steps walked by users the more calories burn.
@@ -548,7 +560,7 @@ ggplot(daily_activity_1, aes(x = totalminutesasleep, y = calories)) +
 - Since sleep length does not correlate with calorie burn, sleep tracking can be positioned as a general wellness tool. Additionally, Bellabeat can encourage users to view sleep data alongside other indicators like stress, which can negatively impact sleep habits.
 
 
-# Active Hour of the Day
+### Active Hour of the Day
 
 - I want to calculate the hour of the day when users are more active based on steps taken.
 
@@ -574,12 +586,13 @@ hourly_steps2 %>%
 
 ![activityhour](https://github.com/user-attachments/assets/6a582a78-daed-488e-9b84-016ada290cce)
 
-**OUTCOME**:
+**Outcome**:
+
 - The visualization shows that users are more active between 8 am and 7 pm, with peak activity during lunchtime (12 pm to 2 pm) and evenings (5 pm to 7 pm).
 - Given the positive correlation between steps and calories burned, I recommend that Bellabeat introduce a feature reminding users that calories are effectively burned during these key periods. This approach will encourage users to stay more active and take advantage of these peak activity times.
 
 
-# Active Days of the Week
+### Active Days of the Week
 
 I want to determine which days of the week users are more active based on steps taken.
 
@@ -596,10 +609,11 @@ daily_activity_1 %>%
   
 ![active_day](https://github.com/user-attachments/assets/0934af7f-98b1-46af-9119-1919a78923a6)
 
-**Outcome**: Users walk more steps on Wednesdays. The average of users walk more than 7,500 steps daily besides Tuesday. 
+**Outcome**: 
 
+Users walk more steps on Wednesdays. The average of users walk more than 7,500 steps daily besides Tuesday. 
 
-# Sleep Days
+### Sleep Days
 
 I want to calculate which days of the week users sleep the most.
   
@@ -617,9 +631,11 @@ daily_activity_1 %>%
 
 ![sleep_day](https://github.com/user-attachments/assets/a89ae00e-1b90-45ba-bc3e-b703a7aeed87)
 
-**Outcome**: Users sleep for longer minutes on weekend(Saturday). However, users sleep less than 8 hours a day.
+**Outcome**: 
 
-# Sleep Efficiency
+Users tend to sleep longer on weekends, particularly Saturdays, but typically sleep between 5 to 8 hours daily, which aligns with a healthy sleep pattern for adults as recommended by science. To support users in maintaining this routine, I recommend that Bellabeat introduce a feature that educates users on the health benefits of achieving the ideal 6 to 8 hours of sleep. Additionally, Bellabeat could implement a tool to help users track and maintain a consistent daily sleep schedule.
+
+### Sleep Efficiency
 
 I want to determine the sleep efficiency of users.
 
@@ -634,5 +650,16 @@ ggplot(daily_sleep1, aes(x = totalminutesasleep, y = totaltimeinbed)) +
   
 ![sleep_efficiency](https://github.com/user-attachments/assets/bae7affc-cb47-4def-9101-e4df990aa52c)
 
-**Outcome**: There is a positive relationship between Time in Bed and Minutes Asleep. It is assumed that the amount of minutes users spent in bed are actually spent asleep.
+**Outcome**: There is a positive relationship between time in bed and minutes asleep, suggesting that users generally spend their time in bed sleeping. Bellabeat can leverage this pattern by introducing a smart feature that tracks sleep duration and provides a gentle alert or bip once users achieve the recommended minimum of 6 hours of sleep. This approach can encourage healthier sleep habits and help users meet the 6 to 8-hour sleep guideline.  
+
+### Recommendations
+---
+
+1. I recommend that Bellabeat introduce reminders to encourage sedentary users to take short walks and stay active throughout the day. Gamified challenges and personalized goals can motivate users to gradually increase their daily activity levels. Additionally, providing educational content on the health benefits of regular movement can help users make informed decisions to improve their fitness habits from sedendary to at aleast fairly active.
+   
+2. From our analysis, we observed that users generally walk over 7,500 steps daily, except on Tuesdays. This is commendable. However, Bellabeat could further encourage users to consistently meet the daily recommended step count of 7,000 to 8,000 steps as suggested by the World Health Organization (WHO), American Heart Association (AHA), and Centers for Disease Control and Prevention (CDC). This can be achieved by sharing motivational health tips on the smart devices, highlighting the benefits of reaching the daily recommended step target.
+   
+3. Since there is a positive correlation between steps and calories burned, Bellabeat can introduce features that highlight and track daily calorie burn based on step goals. This approach will inspire users to engage more in daily walks, as it enables calories loss and overall fitness.
+   
+4. I recommend that Bellabeat introduce a feature that educates users on the health benefits of achieving the ideal 6 to 8 hours of sleep. Additionally, Bellabeat could implement a tool to help users track and maintain a consistent daily sleep schedule.
 
